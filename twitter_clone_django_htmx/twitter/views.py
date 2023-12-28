@@ -14,10 +14,11 @@ from twitter.models import Tweet
 
 def update_last_read_datetime(request):
     if request.user.is_authenticated:
-        cache.set(f"last_read_datetime_{request.user.id}", datetime.now())
+        cache.set(f"last_read_datetime_{request.user.id}", datetime.now().isoformat())
 
-def get_last_read_datetime(request):
-    cache.get(f"last_read_datetime_{request.user.id}")
+def get_last_read_datetime(request) -> datetime:
+    datetime_str = cache.get(f"last_read_datetime_{request.user.id}")
+    return datetime.fromisoformat(datetime_str) if datetime_str else None
 
 
 def index(request):
@@ -67,3 +68,19 @@ def post_tweet(request):
     # return validation error
     raise forms.ValidationError("Tweet validation error")
 
+
+@require_GET
+@login_required
+def check_new_tweet(request):
+    last_read_datetime = get_last_read_datetime(request)
+
+    if last_read_datetime is None:
+        num_new_tweets = 0
+    else:
+        followings = request.user.following.all().values_list('following__id')
+        tweets = Tweet.objects.filter(created_by__in=followings).prefetch_related("created_by").order_by("-created_datetime")
+        num_new_tweets = tweets.filter(created_datetime__gt=last_read_datetime).count()
+    context = {
+        "num_new_tweets": num_new_tweets,
+    }
+    return render(request, "twitter/component/new_tweets.html", context)

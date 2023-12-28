@@ -1,0 +1,13 @@
+{% if num_new_tweets > 0 %}
+<div id="newTweetsAlert" class="hidden p-4 mb-4 bg-blue-100 border-t-4 border-blue-500 rounded-b text-blue-900 px-4 py-3 shadow-md" role="alert">
+    <div class="flex">
+        <div class="py-1"><svg class="fill-current h-6 w-6 text-blue-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M16 8a6 6 0 11-12 0 6 6 0 0112 0zM2 8c0 2.967 2.167 5.432 5 5.91V15a1 1 0 001 1h6a1 1 0 001-1v-1.09c2.833-.478 5-2.943 5-5.91 0-3.314-2.686-6-6-6s-6 2.686-6 6z"/></svg></div>
+        <div>
+            <p hx-get="/twitter/tweets" hx-target="#tweet-list" hx-swap="innerHtml" class="font-bold">新しいツイートが{{ num_new_tweets }}個あります</p>
+            <p class="text-sm" id="newTweetsCount"></p>
+        </div>
+    </div>
+</div>
+{% else %}
+    <!-- 何も表示しない -->
+{% endif %}

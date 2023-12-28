@@ -56,12 +56,19 @@
         <!-- Container for the scrollable feed -->
         <div class="w-full max-w-2xl">
             <!-- Scrollable area -->
+            <div
+                    id="new-tweet"
+                hx-get="/twitter/new_tweets"
+                 hx-trigger="every 2s"
+                 hx-swap="innerHTML"
+            >
+            </div>
             <div id="tweets-indicator" class="flex justify-center htmx-indicator" aria-label="読み込み中">
                 <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
                 <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
                 <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
             </div>
-            <div  id="tweet-list" class="h-full">
+            <div  id="tweet-list" class="h-full" hx-trigger="change" hx-get="/twitter/new_tweets" hx-target="#new-target" hx-swap="innerHTML">
                 {% include "twitter/component/tweets.html" %}
             </div>
         </div>
