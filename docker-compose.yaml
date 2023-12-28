@@ -10,7 +10,7 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: twitter_clone_django_htmx
+      POt pSTGRES_DB: twitter_clone_django_htmx
       POSTGRES_USER: postgres
 
   localstack:
