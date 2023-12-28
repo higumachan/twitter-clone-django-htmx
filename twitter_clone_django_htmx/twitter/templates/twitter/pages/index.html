@@ -8,8 +8,9 @@
     <title>Title</title>
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/browse/htmx.org@1.9.10/dist/ext/debug.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}" />
     {% django_htmx_script %}
+
 </head>
 <body class="bg-gray-100">
 <div class="flex justify-center p-12">
@@ -21,6 +22,7 @@
                 hx-target="#tweet-list"
                 hx-swap="afterbegin"
                 hx-on:htmx:after-request="this.reset()"
+                hx-indicator="#tweets-indicator"
         >
             <div class="flex">
                 <!-- Avatar -->
@@ -54,7 +56,12 @@
         <!-- Container for the scrollable feed -->
         <div class="w-full max-w-2xl">
             <!-- Scrollable area -->
-            <div  id="tweet-list" class="overflow-y-scroll h-96">
+            <div id="tweets-indicator" class="flex justify-center htmx-indicator" aria-label="読み込み中">
+                <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+                <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full mx-4"></div>
+                <div class="animate-ping h-2 w-2 bg-blue-600 rounded-full"></div>
+            </div>
+            <div  id="tweet-list" class="h-full">
                 {% include "twitter/component/tweets.html" %}
             </div>
         </div>

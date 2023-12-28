@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 logger = logging.getLogger(__name__)
 
 
+
 class UserCreatedBaseModelAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):  # type: ignore
         has_created_by = any(True for f in obj._meta.get_fields() if f.name == "created_by")

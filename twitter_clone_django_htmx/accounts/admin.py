@@ -7,8 +7,12 @@ from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from .models import CustomUser
+from .models import CustomUser, Relationship
 from commons.admin import UserCreatedBaseModelAdmin
+
+class RelationshipInlineAdmin(admin.TabularInline):
+    fk_name = "follower"
+    model = Relationship
 
 
 @admin.register(CustomUser)
@@ -17,11 +21,18 @@ class CustomUserAdmin(UserAdmin):
     # limit displayed fields
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
+        # (_('Relation'), {'fields': ("followers", "following")}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
+    inlines = [RelationshipInlineAdmin]
+
+@admin.register(Relationship)
+class RelationshipAdmin(UserCreatedBaseModelAdmin):
+    list_display = ("follower", "following", "created_datetime", "updated_datetime")
+    list_filter = ("follower", "following", "created_datetime", "updated_datetime")
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
