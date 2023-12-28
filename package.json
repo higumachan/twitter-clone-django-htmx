@@ -4,7 +4,7 @@
   "description": "Python Boilerplate contains all the boilerplate you need to create a Python package.",
   "main": "index.js",
   "scripts": {
-    "build": "tailwind build -i twitter_clone_django_htmx/staticfiles/css/tailwind.css -o twitter_clone_django_htmx/staticfiles/css/style.css && cleancss -o twitter_clone_django_htmx/staticfiles/css/style.min.css twitter_clone_django_htmx/staticfiles/css/style.css"
+    "build": "tailwind build -i twitter_clone_django_htmx/commons/static/css/tailwind.css -o twitter_clone_django_htmx/commons/static/css/style.css && cleancss -o twitter_clone_django_htmx/staticfiles/css/style.min.css twitter_clone_django_htmx/commons/static/css/style.css"
   },
   "keywords": [],
   "author": "",
