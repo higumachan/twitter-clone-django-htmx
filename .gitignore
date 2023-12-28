@@ -112,3 +112,5 @@ exp/test_img/dataset/
 
 zappa_settings.json
 rsdm-dev-template-*
+
+node_modules
