@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Tweet List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .tweet-enter {
+            opacity: 0;
+            transform: translateY(-100%);
+        }
+        .tweet-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+
+    <div class="w-full max-w-2xl">
+        <button class="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="addTweet()">新しいツイートを追加</button>
+        <div id="tweetList" class="flex flex-col space-y-2">
+            <!-- Existing tweets will go here -->
+        </div>
+    </div>
+
+    <script>
+        function addTweet() {
+            const list = document.getElementById('tweetList');
+
+            const newTweet = document.createElement('div');
+            newTweet.innerHTML = `
+                <div class="p-4 bg-white rounded-xl shadow-md overflow-hidden transition-all tweet-enter">
+                    <p>ここに新しいツイートの内容が表示されます。</p>
+                </div>
+            `;
+
+            newTweet.firstChild.classList.add('tweet-enter-active');
+            list.insertBefore(newTweet, list.firstChild);
+
+            setTimeout(() => {
+                newTweet.firstChild.classList.remove('tweet-enter', 'tweet-enter-active');
+            }, 500);
+        }
+    </script>
+
+</body>
+</html>
