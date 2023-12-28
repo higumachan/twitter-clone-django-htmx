@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+
+  db:
+    image: postgres:13
+    container_name: "twitter_clone_django_htmx-postgres-13"
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: twitter_clone_django_htmx
+      POSTGRES_USER: postgres
+
+  localstack:
+    image: localstack/localstack:2.0.2
+    container_name: "twitter_clone_django_htmx-localstack-2.0.2"
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3,sqs
+
+  wait:
+    image: waisbrot/wait
+    depends_on:
+      - localstack
+      - db
+    environment:
+      - TARGETS=localstack:4566,db:5432

@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = ">=4.2,<4.3"
+"psycopg2-binary" = "*"
+pydantic = "*"
+zappa = ">=0.57.0,<0.58.0"
+whitenoise = "*"
+
+[dev-packages]
+"flake8" = "*"
+pylint = "*"
+mypy = "*"
+coverage = "*"
+pydocstyle = "*"
+
+[requires]
+python_version = "3.10"

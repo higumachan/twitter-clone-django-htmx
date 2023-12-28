@@ -1,0 +1,58 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/app/
+    docker:
+      - image: cimg/python:3.10
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+      - image: postgres:13
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: twitter_clone_django_htmx 
+          POSTGRES_HOST_AUTH_METHOD: trust
+
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          key: deps-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Upgrade pipenv
+          command: |
+            pip install pipenv -U
+      - run:
+          name: install dependencies
+          command: |
+            pipenv sync --dev
+      - save_cache:
+          key: deps-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - "/home/circleci/.aws"
+            - "/home/circlci/.local"
+            - "/usr/local/bin"
+      - run:
+          name: run tests
+          command: |
+
+            make test
+
+      - store_test_results:
+          path: test-reports
+
+      - store_artifacts:
+          path: test-reports
+
+      - run:
+          name: code checks (flake8)
+          command: |
+            make flake8
+
+
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - build
+
