@@ -10,5 +10,6 @@ admin.site.site_header = settings.SITE_HEADER
 admin.site.site_title = settings.SITE_TITLE
 
 urlpatterns = [
+    path("twitter/", include("twitter.urls")),
     path('admin/', admin.site.urls),
 ]

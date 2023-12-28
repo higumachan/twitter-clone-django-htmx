@@ -1,0 +1,27 @@
+{% for tweet in tweets %}
+<div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl my-4">
+    <div class="md:flex">
+        <div class="p-8">
+            <div class="flex items-center">
+                <img class="h-10 w-10 rounded-full mr-4" src="https://via.placeholder.com/150" alt="User avatar">
+                <div class="text-sm">
+                    <p class="text-gray-900 leading-none">ユーザー名</p>
+                    <p class="text-gray-600">@{{ tweet.created_by }}</p>
+                </div>
+            </div>
+            <div class="mt-2 text-gray-600 text-sm">
+                {{ tweet.content }}
+            </div>
+            <div class="mt-4">
+                <span class="text-gray-400 text-xs">3h ago</span>
+            </div>
+            <div class="mt-4 flex items-center">
+                <span class="text-gray-400 mr-2 hover:text-blue-500 cursor-pointer">💬</span>
+                <span class="text-gray-400 mr-2 hover:text-green-500 cursor-pointer">🔁</span>
+                <span class="text-gray-400 mr-2 hover:text-red-500 cursor-pointer">❤️</span>
+                <span class="text-gray-400 hover:text-blue-500 cursor-pointer">📤</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

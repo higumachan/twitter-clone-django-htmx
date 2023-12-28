@@ -1,0 +1,64 @@
+{% load django_htmx %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/browse/htmx.org@1.9.10/dist/ext/debug.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% django_htmx_script %}
+</head>
+<body class="bg-gray-100">
+<div class="flex justify-center p-12">
+    <!-- Container for the Tweet box -->
+    <div class="w-full max-w-xl rounded-lg bg-white p-4 shadow-lg">
+        <form
+                hx-post="/twitter/post_tweet"
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-target="#tweet-list"
+                hx-swap="afterbegin"
+                hx-on:htmx:after-request="this.reset()"
+        >
+            <div class="flex">
+                <!-- Avatar -->
+                <img class="h-12 w-12 rounded-full" src="https://via.placeholder.com/150" alt="User avatar">
+
+                <!-- Tweet input -->
+                <div class="ml-4 flex-1">
+                    <textarea name="content" class="w-full h-24 p-2 border-none focus:ring-0 text-lg placeholder-gray-600" placeholder="What's happening?"></textarea>
+                </div>
+            </div>
+
+            <!-- Tweet actions -->
+            <div class="flex justify-between mt-4">
+                <!-- Placeholder for icons (e.g., media, gif) -->
+                <div class="text-blue-400 space-x-2">
+                    <span>📸</span>
+                    <span>🎥</span>
+                    <span>👻</span>
+                </div>
+
+                <!-- Tweet button -->
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full">
+                    Tweet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="flex justify-center p-12">
+        <!-- Container for the scrollable feed -->
+        <div class="w-full max-w-2xl">
+            <!-- Scrollable area -->
+            <div  id="tweet-list" class="overflow-y-scroll h-96">
+                {% include "twitter/component/tweets.html" %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
