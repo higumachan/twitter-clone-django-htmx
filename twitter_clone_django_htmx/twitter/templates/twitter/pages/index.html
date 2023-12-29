@@ -7,20 +7,50 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js"></script>
     <script src="https://unpkg.com/browse/htmx.org@1.9.10/dist/ext/debug.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
     {% django_htmx_script %}
+
+    <style>
+        #tweet-list.htmx-settling > .tweet.htmx-added {
+            animation: scale-up-ver-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+        #tweet-list.htmx-settling > .tweet:not(.htmx-added) {
+            animation: slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        }
+
+        @keyframes scale-up-ver-top {
+            from {
+                transform: scaleY(0.0);
+                transform-origin: 100% 0;
+            }
+            to {
+                transform: scaleY(1.0);
+                transform-origin: 100% 0;
+            }
+        }
+
+        @keyframes slide-bottom {
+            0% {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    </style>
 
 </head>
 <body class="bg-gray-100">
-<div class="flex justify-center p-12">
+<div hx-ext="class-tools" class="flex justify-center p-12">
     <!-- Container for the Tweet box -->
     <div class="w-full max-w-xl rounded-lg bg-white p-4 shadow-lg">
         <form
                 hx-post="/twitter/post_tweet"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                 hx-target="#tweet-list"
-                hx-swap="afterbegin"
+                hx-swap="afterbegin settle:1s"
                 hx-on:htmx:after-request="this.reset()"
                 hx-indicator="#tweets-indicator"
         >
@@ -56,9 +86,8 @@
         <!-- Container for the scrollable feed -->
         <div class="w-full max-w-2xl">
             <!-- Scrollable area -->
-            <div
-                    id="new-tweet"
-                hx-get="/twitter/new_tweets"
+            <div id="new-tweet"
+                 hx-get="/twitter/new_tweets"
                  hx-trigger="every 2s"
                  hx-swap="innerHTML"
             >

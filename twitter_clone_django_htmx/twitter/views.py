@@ -12,13 +12,17 @@ from twitter.forms import TweetForm
 from twitter.models import Tweet
 
 
-def update_last_read_datetime(request):
+def update_last_read_datetime(request) -> datetime | None:
+    last_data = None
     if request.user.is_authenticated:
+        last_data = cache.get(f"last_read_datetime_{request.user.id}")
         cache.set(f"last_read_datetime_{request.user.id}", datetime.now().isoformat())
+    return last_data
 
-def get_last_read_datetime(request) -> datetime:
-    datetime_str = cache.get(f"last_read_datetime_{request.user.id}")
-    return datetime.fromisoformat(datetime_str) if datetime_str else None
+def get_last_read_datetime(request) -> datetime | None:
+    if request.user.is_authenticated:
+        datetime_str = cache.get(f"last_read_datetime_{request.user.id}")
+        return datetime.fromisoformat(datetime_str) if datetime_str else None
 
 
 def index(request):
@@ -39,8 +43,8 @@ def index(request):
 
 @require_GET
 def tweets(request):
-    update_last_read_datetime(request)
     tweets = Tweet.objects.all().prefetch_related("created_by").order_by("-created_datetime")
+
     context = {
         "tweets": [{
             "content": tweet.content,
@@ -48,6 +52,22 @@ def tweets(request):
         } for tweet in tweets]
     }
     return render(request, "twitter/component/tweets.html", context)
+
+@require_GET
+def updated_tweets(request):
+    last_update = update_last_read_datetime(request)
+    tweets = Tweet.objects.all().prefetch_related("created_by").order_by("-created_datetime")
+    new_tweets = list(tweets.filter(created_datetime__gt=last_update)) if last_update else []
+
+
+    context = {
+        "tweets": [{
+            "content": tweet.content,
+            "created_by": tweet.created_by.username,
+        } for tweet in new_tweets]
+    }
+    return render(request, "twitter/component/tweets.html", context)
+
 
 @require_POST
 @login_required
@@ -83,4 +103,4 @@ def check_new_tweet(request):
     context = {
         "num_new_tweets": num_new_tweets,
     }
-    return render(request, "twitter/component/new_tweets.html", context)
+    return render(request, "twitter/component/check_new_tweets.html", context)
